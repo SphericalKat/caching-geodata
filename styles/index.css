@@ -24,3 +24,7 @@ strong {
     content: '`';
     opacity: 0.0;
 }
+
+.nat-img {
+    @apply object-contain;
+}

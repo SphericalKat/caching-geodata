@@ -269,6 +269,45 @@ layout: default
 
 # Step 2: Connection
 
+ - Very often, the other WebRTC agent will not be on the same network. Calls will have to go over the public internet.
+ - Some networks don’t allow UDP traffic at all, or maybe they don’t allow TCP. Some networks may have a very low MTU (Maximum Transmission Unit). There are lots of variables that network administrators can change that can make communication difficult.
+ - Almost every user on the internet is behind a **NAT** (Network Address Translator). This helps ISPs avoid IPv4 exhaustion, but causes problems for WebRTC connections.
+ - NAT, or Network Address Translation, is a method used by routers to allow multiple devices on a private network to share a **single public IP address**. NAT works by **modifying the IP addresses** of network packets as they pass through the router, **replacing the private IP** addresses of the devices on the network with the **public IP address of the router**. This allows the devices to access the internet without each needing its own public IP address.
+
+<style>
+    ul {
+    }
+    li {
+        font-size: 1rem;
+        line-height: 1rem;
+        @apply pt-4;
+    }
+</style>
+
+<!-- 
+The problems with NAT being that only the router itself has a public IP, and individual devices on it don't;
+so how does webrtc figure out which device to connect to? The answer is NAT mappings. In a nutshell, this is simply
+a table maintained by the router where it maps a list of IP addresses that have contacted/been contacted by the local router
+to a local port. 
+
+This is very useful for having multiple devices share a single public IP address, but makes sending data to a 
+particular device difficult. To get around this, we use STUN/TURN server.
+
+-->
+
+---
+layout: default
+---
+
+# STUN
+Session Traversal Utilities for NAT
+
+- Existed before WebRTC
+- Allows for the programmatic creation of NAT Mappings, and also gives you the mapping details that you can share with the other peer, so they can send traffic to you via the mapping you just created.
+- Peers send a `STUN Binding Request` to the STUN server. The server responds with a `STUN Binding Response`, which contains an IP (the sender's public IP) and a port (the port bound by the NAT mapping).
+- This information is sent to the other peer via the SDP exchange during signaling.
+- However, the mapped address is not always helpful. Some NATs do not let in traffic unless the router has initiated connection with them first. In this case, packets are not allowed in through the mapping. To get over this, we use TURN.
+
 ---
 layout: image-right
 image: https://source.unsplash.com/collection/94734566/1920x1080
