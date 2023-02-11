@@ -332,7 +332,7 @@ Traversal Using Relays around NAT
 Think of it as a forwarding address, you give this out so that others can send you traffic via TURN!
 
 When you send outbound traffic via TURN it is sent via the Relayed Transport Address. When a remote peer gets traffic they see it coming from the TURN Server.
- -->
+-->
 
 ---
 layout: default
@@ -368,287 +368,64 @@ exchange them over signaling using the SDP, and then attempts to connect.
 </style>
 
 ---
-layout: image-right
-image: https://source.unsplash.com/collection/94734566/1920x1080
+layout: default
 ---
 
-# Code
+# Media Communication with WebRTC
 
-Use code snippets and get the highlighting directly![^1]
+ - Uses two pre-existing protocols: **RTP** and **RTCP**.
+ - **RTP** (Real-time Transport Protocol) carries the media and was designed for real-time delivery.
+ - **RTCP** (RTP Control Protocol) is the protocol that communicates metadata about the call. The format is very flexible and allows you to add any metadata you want. It does not stipulate any rules around latency or reliability, but gives you the tools to implement them.
+ - **RTCP** also handles packet loss and gives you the tools to implement congestion control. It gives you the **in-band** bi-directional communication necessary to respond to **changing network conditions**.
 
-```ts {all|2|1-6|9|all}
-interface User {
-  id: number
-  firstName: string
-  lastName: string
-  role: string
-}
-
-function updateUser(id: number, update: User) {
-  const user = getUser(id)
-  const newUser = { ...user, ...update }
-  saveUser(id, newUser)
-}
-```
-
-<arrow v-click="3" x1="400" y1="420" x2="230" y2="330" color="#564" width="3" arrowSize="1" />
-
-[^1]: [Learn More](https://sli.dev/guide/syntax.html#line-highlighting)
-
-<style>
-.footnotes-sep {
-  @apply mt-20 opacity-10;
-}
-.footnotes {
-  @apply text-sm opacity-75;
-}
-.footnote-backref {
-  display: none;
-}
+ <style>
+    li {
+        font-size: 1rem;
+        line-height: 1rem;
+        @apply pt-4;
+    }
 </style>
 
----
+<!-- 
+WebRTC allows you to send and receive an unlimited amount of audio and video streams. You can add and remove these streams at anytime during a call. These streams could all be independent, or they could be bundled together! You could send a video feed of your desktop, and then include audio and video from your webcam.
 
-# Components
+RTP (Real-time Transport Protocol) is the protocol that carries the media. It was designed to allow for real-time delivery of video. It does not stipulate any rules around latency or reliability, but gives you the tools to implement them. RTP gives you streams, so you can run multiple media feeds over one connection. It also gives you the timing and ordering information you need to feed a media pipeline.
 
-<div grid="~ cols-2 gap-4">
-<div>
-
-You can use Vue components directly inside your slides.
-
-We have provided a few built-in components like `<Tweet/>` and `<Youtube/>` that you can use directly. And adding your custom components is also super easy.
-
-```html
-<Counter :count="10" />
-```
-
-<!-- ./components/Counter.vue -->
-<Counter :count="10" m="t-4" />
-
-Check out [the guides](https://sli.dev/builtin/components.html) for more.
-
-</div>
-<div>
-
-```html
-<Tweet id="1390115482657726468" />
-```
-
-<Tweet id="1390115482657726468" scale="0.65" />
-
-</div>
-</div>
-
-<!--
-Presenter note with **bold**, *italic*, and ~~striked~~ text.
-
-Also, HTML elements are valid:
-<div class="flex w-full">
-  <span style="flex-grow: 1;">Left content</span>
-  <span>Right content</span>
-</div>
+RTCP (RTP Control Protocol) is the protocol that communicates metadata about the call. The format is very flexible and allows you to add any metadata you want. This is used to communicate statistics about the call. It is also used to handle packet loss and to implement congestion control. It gives you the bi-directional communication necessary to respond to changing network conditions.
 -->
 
-
 ---
-class: px-20
----
-
-# Themes
-
-Slidev comes with powerful theming support. Themes can provide styles, layouts, components, or even configurations for tools. Switching between themes by just **one edit** in your frontmatter:
-
-<div grid="~ cols-2 gap-2" m="-t-2">
-
-```yaml
----
-theme: default
----
-```
-
-```yaml
----
-theme: seriph
----
-```
-
-<img border="rounded" src="https://github.com/slidevjs/themes/blob/main/screenshots/theme-default/01.png?raw=true">
-
-<img border="rounded" src="https://github.com/slidevjs/themes/blob/main/screenshots/theme-seriph/01.png?raw=true">
-
-</div>
-
-Read more about [How to use a theme](https://sli.dev/themes/use.html) and
-check out the [Awesome Themes Gallery](https://sli.dev/themes/gallery.html).
-
----
-preload: false
+layout: default
 ---
 
-# Animations
+# Dealing with unpredictable networks
+ - Real-life networks are **unpredictable** and **unreliable** include packet loss; **RTCP** helps mitigate this. 
+ - **RTCP** allows for **PLI** (Picture Loss Indication) to be sent whenever the decoder is unable to decode a partial frame; either due to packet loss or if the decoder crashed. It requests a full key frame from the sender.
+ - If only a single RTP packet should be retransmitted, RTCP can send **NACK**s with the SSRC (to identify the stream) and the packet's sequence number to the sender. If the sender does not have this RTP packet available to re-send, it ignores this message.
+ - **RTCP** also includes sender and receiver reports. These are used to report statistics about the actual number of packets received and jitter. These can further be used for diagnostics and congestion control.
+ - There are two primary objectives for these protocols:
+   - Estimate the available bandwidth (in each direction) supported by the network.
+   - Communicate network characteristics between sender and receiver.
 
-Animations are powered by [@vueuse/motion](https://motion.vueuse.org/).
 
-```html
-<div
-  v-motion
-  :initial="{ x: -80 }"
-  :enter="{ x: 0 }">
-  Slidev
-</div>
-```
+<!-- 
 
-<div class="w-60 relative mt-6">
-  <div class="relative w-40 h-40">
-    <img
-      v-motion
-      :initial="{ x: 800, y: -100, scale: 1.5, rotate: -50 }"
-      :enter="final"
-      class="absolute top-0 left-0 right-0 bottom-0"
-      src="https://sli.dev/logo-square.png"
-    />
-    <img
-      v-motion
-      :initial="{ y: 500, x: -100, scale: 2 }"
-      :enter="final"
-      class="absolute top-0 left-0 right-0 bottom-0"
-      src="https://sli.dev/logo-circle.png"
-    />
-    <img
-      v-motion
-      :initial="{ x: 600, y: 400, scale: 2, rotate: 100 }"
-      :enter="final"
-      class="absolute top-0 left-0 right-0 bottom-0"
-      src="https://sli.dev/logo-triangle.png"
-    />
-  </div>
+Networks are unpredictable and unreliable. Bandwidth availability can change multiple times throughout a session. It is not uncommon to see available bandwidth change dramatically (orders of magnitude) within a second.
 
-  <div
-    class="text-5xl absolute top-14 left-40 text-[#2B90B6] -z-1"
-    v-motion
-    :initial="{ x: -80, opacity: 0}"
-    :enter="{ x: 0, opacity: 1, transition: { delay: 2000, duration: 1000 } }">
-    Slidev
-  </div>
-</div>
+RTP/RTCP runs over all types of different networks, and as a result, it’s common for some communication to be dropped on its way from the sender to the receiver. Being built on top of UDP, there is no built-in transport layer mechanism for packet retransmission, let alone handling congestion control.
 
-<!-- vue script setup scripts can be directly used in markdown, and will only affects current page -->
-<script setup lang="ts">
-const final = {
-  x: 0,
-  y: 0,
-  rotate: 0,
-  scale: 1,
-  transition: {
-    type: 'spring',
-    damping: 10,
-    stiffness: 20,
-    mass: 2
-  }
-}
-</script>
-
-<div
-  v-motion
-  :initial="{ x:35, y: 40, opacity: 0}"
-  :enter="{ y: 0, opacity: 1, transition: { delay: 3500 } }">
-
-[Learn More](https://sli.dev/guide/animations.html#motion)
-
-</div>
+The main idea is to adjust encoding bitrate based on predicted, current, and future available network bandwidth. This ensures that video and audio signal of the best possible quality is transmitted, and the connection does not get dropped because of network congestion. Heuristics that model the network behavior and tries to predict it is known as Bandwidth estimation.
+ -->
 
 ---
-
-# LaTeX
-
-LaTeX is supported out-of-box powered by [KaTeX](https://katex.org/).
-
-<br>
-
-Inline $\sqrt{3x-1}+(1+x)^2$
-
-Block
-$$
-\begin{array}{c}
-
-\nabla \times \vec{\mathbf{B}} -\, \frac1c\, \frac{\partial\vec{\mathbf{E}}}{\partial t} &
-= \frac{4\pi}{c}\vec{\mathbf{j}}    \nabla \cdot \vec{\mathbf{E}} & = 4 \pi \rho \\
-
-\nabla \times \vec{\mathbf{E}}\, +\, \frac1c\, \frac{\partial\vec{\mathbf{B}}}{\partial t} & = \vec{\mathbf{0}} \\
-
-\nabla \cdot \vec{\mathbf{B}} & = 0
-
-\end{array}
-$$
-
-<br>
-
-[Learn more](https://sli.dev/guide/syntax#latex)
-
+layout: default
 ---
 
-# Diagrams
+# Adaptive Bitrate and Bandwidth Estimation
 
-You can create diagrams / graphs from textual descriptions, directly in your Markdown.
-
-<div class="grid grid-cols-3 gap-10 pt-4 -mb-6">
-
-```mermaid {scale: 0.5}
-sequenceDiagram
-    Alice->John: Hello John, how are you?
-    Note over Alice,John: A typical interaction
-```
-
-```mermaid {theme: 'neutral', scale: 0.8}
-graph TD
-B[Text] --> C{Decision}
-C -->|One| D[Result 1]
-C -->|Two| E[Result 2]
-```
-
-```plantuml {scale: 0.7}
-@startuml
-
-package "Some Group" {
-  HTTP - [First Component]
-  [Another Component]
-}
-
-node "Other Groups" {
-  FTP - [Second Component]
-  [First Component] --> FTP
-}
-
-cloud {
-  [Example 1]
-}
-
-
-database "MySql" {
-  folder "This is my folder" {
-    [Folder 3]
-  }
-  frame "Foo" {
-    [Frame 4]
-  }
-}
-
-
-[Another Component] --> [Example 1]
-[Example 1] --> [Folder 3]
-[Folder 3] --> [Frame 4]
-
-@enduml
-```
-
-</div>
-
-[Learn More](https://sli.dev/guide/syntax.html#diagrams)
-
----
-src: ./pages/multiple-entries.md
-hide: false
----
+- **REMB** - Receiver Estimated Maximum Bitrate; the **sender** receives bandwidth estimation from the **receiver**, sets encoder bitrate to the received value. Doesn't work very well in practice.
+- **GCC** - Google Congestion Control; used for accurate bandwidth estimation.
+- **TWCC** - Transport Wide Congestion Control; the **receiver** lets the **sender** know the arrival time of each packet. This is enough information for the sender to measure inter-packet arrival delay variation, as well as identifying which packets were dropped or arrived too late to contribute to the audio/video feed. With this data being exchanged frequently, the sender is able to quickly adjust to changing network conditions and vary its output bandwidth using an algorithm such as **GCC**.
 
 ---
 layout: center
@@ -657,4 +434,4 @@ class: text-center
 
 # Learn More
 
-[Documentations](https://sli.dev) · [GitHub](https://github.com/slidevjs/slidev) · [Showcases](https://sli.dev/showcases.html)
+[RFCs](https://www.w3.org/groups/wg/webrtc/publications)
