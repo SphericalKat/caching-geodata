@@ -309,6 +309,65 @@ Session Traversal Utilities for NAT
 - However, the mapped address is not always helpful. Some NATs do not let in traffic unless the router has initiated connection with them first. In this case, packets are not allowed in through the mapping. To get over this, we use TURN.
 
 ---
+layout: default
+---
+
+# STUN
+
+<img src="/nat-stun.png" class="rounded-md">
+
+---
+layout: default
+---
+
+# TURN
+Traversal Using Relays around NAT
+- Used when direct connectivity isn't possible. Could be due to incompatible NAT types, or maybe the NATs don't speak the same protocol.
+- Uses a dedicated server, which acts as a proxy for a peer. The client connects to a TURN Server and creates an `Allocation`. By creating an allocation, a client gets a temporary IP/Port/Protocol that can be used to send traffic back to the client. This new listener is known as the **Relayed Transport Address**.
+- Disadvantages:
+ - Increased latency/packet loss/jitter
+ - TURN servers are expensive to host compared to STUN servers, as they require large amounts of bandwidth and resources.
+
+<!-- 
+Think of it as a forwarding address, you give this out so that others can send you traffic via TURN!
+
+When you send outbound traffic via TURN it is sent via the Relayed Transport Address. When a remote peer gets traffic they see it coming from the TURN Server.
+ -->
+
+---
+layout: default
+---
+
+# ICE
+Interactive Connectivity Establishment
+
+- This is how WebRTC connects two agents by determining **all possible routes** between two peers and selecting the best.
+- After connectivity is established, **any data** can be sent over it; it behaves like a regular socket.
+- A route is defined as a **pair** of **local** and **remote** transport address.
+- Each possible route is called a `Candidate Pair`. The ICE protocol finds the best route out of these.
+- Both agents start sending traffic on each pair. Each pair that saw traffic gets promoted to a `Valid Candidate` pair.
+The controlling agent nominates one of these pairs and attempt one more round of bi-directional communication. If this is successful, the nominated pair is used for the rest of the session.
+
+<br>
+
+For more information: https://katb.in/ice
+
+<!--
+These routes are known as candidate pairs, which are a pairing of a local and remote transport address.
+This is where STUN and TURN come into play with ICE. These addresses can be your local IP address + port, 
+a NAT mapping(STUN), or Relayed Transport Address (TURN). Each peer gathers all the addresses that they want to use,
+exchange them over signaling using the SDP, and then attempts to connect.
+-->
+
+<style>
+    li {
+        font-size: 1rem;
+        line-height: 1rem;
+        @apply pt-4;
+    }
+</style>
+
+---
 layout: image-right
 image: https://source.unsplash.com/collection/94734566/1920x1080
 ---
