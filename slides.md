@@ -3,7 +3,7 @@
 theme: default
 # random image from a curated Unsplash collection by Anthony
 # like them? see https://unsplash.com/collections/94734566/slidev
-background: https://source.unsplash.com/collection/94734566/1920x1080
+background: '#1f222a'
 # apply any windi css classes to the current slide
 class: 'text-center'
 # https://sli.dev/custom/highlighters.html
@@ -21,25 +21,24 @@ drawings:
   persist: false
 # page transition
 transition: slide-left
-# use UnoCSS
-css: unocss
+
+fonts:
+  sans: 'Plus Jakarta Sans'
+  mono: JetBrains Mono
 ---
 
-# Welcome to Slidev
+# Demystifying WebRTC
 
-Presentation slides for developers
+A gentle introduction to the protocols powering Audio/Video calls worldwide.
 
-<div class="pt-12">
+<!-- <div class="pt-12">
   <span @click="$slidev.nav.next" class="px-2 py-1 rounded cursor-pointer" hover="bg-white bg-opacity-10">
     Press Space for next page <carbon:arrow-right class="inline"/>
   </span>
-</div>
+</div> -->
 
 <div class="abs-br m-6 flex gap-2">
-  <button @click="$slidev.nav.openInEditor()" title="Open in Editor" class="text-xl slidev-icon-btn opacity-50 !border-none !hover:text-white">
-    <carbon:edit />
-  </button>
-  <a href="https://github.com/slidevjs/slidev" target="_blank" alt="GitHub"
+  <a href="https://github.com/SphericalKat/demystifying-webrtc" target="_blank" alt="GitHub"
     class="text-xl slidev-icon-btn opacity-50 !border-none !hover:text-white">
     <carbon-logo-github />
   </a>
@@ -51,24 +50,22 @@ The last comment block of each slide will be treated as slide notes. It will be 
 
 ---
 transition: fade-out
+layout: default
 ---
 
-# What is Slidev?
+# What _is_ WebRTC? Why is it useful?
 
-Slidev is a slides maker and presenter designed for developers, consist of the following features
+<br/>
+<br/>
+<br/>
+<br/>
 
-- 📝 **Text-based** - focus on the content with Markdown, and then style them later
-- 🎨 **Themable** - theme can be shared and used with npm packages
-- 🧑‍💻 **Developer Friendly** - code highlighting, live coding with autocompletion
-- 🤹 **Interactive** - embedding Vue components to enhance your expressions
-- 🎥 **Recording** - built-in recording and camera view
-- 📤 **Portable** - export into PDF, PNGs, or even a hostable SPA
-- 🛠 **Hackable** - anything possible on a webpage
-
-<br>
-<br>
-
-Read more about [Why Slidev?](https://sli.dev/guide/why)
+- 📝 **Protocol** - Specifies how 2 agents can negotiate _bi-directional_ _secure_ _real-time_ communication.
+- 🎨 **API** - Allows developers to use the WebRTC protocol.
+- 🧑‍💻 **Open standard** - WebRTC is an open standard with multiple FOSS implementations.
+- 🤹 **Widely available** - All modern browsers support WebRTC.
+- 🎥 **Industry Standard** - The backbone of the Audio/Video call industry.
+- 📤 **Mandatory encryption** - Communication between two peers is mandatorily encrypted.
 
 <!--
 You can have `style` tag in markdown to override the style for the current page.
@@ -77,18 +74,22 @@ Learn more: https://sli.dev/guide/syntax#embedded-styles
 
 <style>
 h1 {
-  background-color: #2B90B6;
-  background-image: linear-gradient(45deg, #4EC5D4 10%, #146b8c 20%);
-  background-size: 100%;
-  -webkit-background-clip: text;
-  -moz-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -moz-text-fill-color: transparent;
+    font-weight: 600;
+    color: #78e2a0;
+}
+strong {
+    color: #78e2a0;
 }
 </style>
 
 <!--
-Here is another comment.
+WebRTC is both a protocol and an API. The protocol specifies how 2 agents on the internet
+can negotiate bidirectional, secure, real time communication.
+
+The API allows you to use the protocol.
+
+A similar relationship would be the one between HTTP and the Fetch API.
+WebRTC the protocol would be HTTP, and WebRTC the API would be the Fetch API.
 -->
 
 ---
