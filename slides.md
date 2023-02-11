@@ -220,7 +220,7 @@ layout: two-cols
 
 # Media description in SDP
 
-```text {all|4|5|6|1,9|10|all}
+```text {all|4|5|6|1,9|10|11-14|all}
 m=audio 9 UDP/TLS/RTP/SAVPF 111
 c=IN IP4 0.0.0.0
 a=setup:active
@@ -255,7 +255,7 @@ a=sendrecv
         padding-left: 16px;
     }
     li {
-        @apply text-sm;
+        @apply text-xs;
     }
 </style>
 
