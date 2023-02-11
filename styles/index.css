@@ -1,0 +1,26 @@
+h1 {
+    font-weight: 600;
+    color: #78e2a0;
+}
+strong {
+    color: #78e2a0;
+}
+
+.slidev-page {
+    @apply text-xl;
+    background-color: #1f222a;
+}
+
+.dark #slide-content {
+    background-color: #1f222a;
+}
+
+.slidev-layout pre, .slidev-layout code {
+    @apply font-bold;
+    color: #78e2a0;
+}
+
+:not(pre) > code:before, :not(pre) > code:after {
+    content: '`';
+    opacity: 0.0;
+}

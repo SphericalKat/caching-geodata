@@ -56,9 +56,7 @@ layout: default
 # What _is_ WebRTC? Why is it useful?
 
 <br/>
-<br/>
-<br/>
-<br/>
+
 
 - 📝 **Protocol** - Specifies how 2 agents can negotiate _bi-directional_ _secure_ _real-time_ communication.
 - 🎨 **API** - Allows developers to use the WebRTC protocol.
@@ -73,13 +71,7 @@ Learn more: https://sli.dev/guide/syntax#embedded-styles
 -->
 
 <style>
-h1 {
-    font-weight: 600;
-    color: #78e2a0;
-}
-strong {
-    color: #78e2a0;
-}
+
 </style>
 
 <!--
@@ -90,32 +82,192 @@ The API allows you to use the protocol.
 
 A similar relationship would be the one between HTTP and the Fetch API.
 WebRTC the protocol would be HTTP, and WebRTC the API would be the Fetch API.
+
+This list is not exhaustive, just an example of some of the things you may appreciate during your journey.
+Don’t worry if you don’t know all these terms yet, we will go through them along the way.
 -->
 
 ---
 transition: slide-up
 ---
 
-# Navigation
+# Four steps to success
 
-Hover on the bottom-left corner to see the navigation's controls panel, [learn more](https://sli.dev/guide/navigation.html)
+We can broadly divide the WebRTC protocol into four sections.
 
-### Keyboard Shortcuts
+<br />
 
-|     |     |
-| --- | --- |
-| <kbd>right</kbd> / <kbd>space</kbd>| next animation or slide |
-| <kbd>left</kbd>  / <kbd>shift</kbd><kbd>space</kbd> | previous animation or slide |
-| <kbd>up</kbd> | previous slide |
-| <kbd>down</kbd> | next slide |
 
-<!-- https://sli.dev/guide/animations.html#click-animations -->
-<img
-  v-click
-  class="absolute -bottom-9 -left-7 w-80 opacity-50"
-  src="https://sli.dev/assets/arrow-bottom-left.svg"
-/>
-<p v-after class="absolute bottom-23 left-45 opacity-30 transform -rotate-10">Here!</p>
+1. **Signaling** - How peers find each other in WebRTC.
+2. **Connecting** - NAT Traversal with STUN/TURN
+3. **Securing** - The transport layer with DTLS and SRTP
+4. **Communicating** - With peers via RTP and SCTP
+
+
+<!--
+WebRTC solves a lot of problems. At first glance the technology may seem over-engineered, but the genius of WebRTC is its humility. It wasn’t created under the assumption that it could solve everything better. Instead, it embraced many existing single purpose technologies and brought them together into a streamlined, widely applicable bundle.
+
+These steps are sequential, which means the prior step must be 100% successful for the subsequent step to begin.
+
+One peculiar fact about WebRTC is that each step is actually made up of many other protocols! To make WebRTC, we stitch together many existing technologies. In that sense, you can think of WebRTC as being more a combination and configuration of well-understood tech dating back to the early 2000s than as a brand-new process in its own right.
+ -->
+
+---
+layout: default
+---
+
+# Signaling
+
+- **WebRTC agents** have no idea who to communicate with. Signalling is used to bootstrap the call.
+- **Signaling** - uses an existing plaintext protocol called **SDP** (Session Description Protocol)
+- Each **SDP** message is made up of Key-Value pairs, which contains information such as:
+  - The **IPs** and **Ports** that the agent is reachable on (candidates).
+  - The number of audio and video **tracks** the agent wishes to send.
+  - The audio and video **codecs** each agent supports.
+  - Some values used while connecting (`uFrag`/`uPwd`).
+  - The **certificate fingerprint** used while securing the connection.
+- WebRTC uses the **offer/answer** model. One WebRTC agent makes an "**Offer**" to connect, and the other agent "**Answers**" if it is willing to accept what has been offered.
+- This gives the answerer a chance to **reject unsupported codecs**. This is how two peers can understand what formats they are willing to exchange.
+
+<style>
+    li {
+        padding-top: 8px;
+        @apply text-sm;
+    }
+</style>
+<!-- 
+
+This might seem a bit conterintuitive, but it makes sense if you think about it.
+
+When a WebRTC Agent starts, it has no idea who it is going to communicate with or what they are going to communicate about. The Signaling step solves this issue. Signaling is used to bootstrap the call, allowing two independent WebRTC agents to start communicating.
+
+Signaling uses an existing, plain-text protocol called SDP (Session Description Protocol). Each SDP message is made up of key/value pairs and contains a list of “media sections”. The SDP that the two WebRTC agents exchange contains details like:
+
+(refer to slide content)
+
+It is important to note that signaling typically happens “out-of-band”, which means applications generally don’t use WebRTC itself to exchange signaling messages.
+
+many applications will simply use their existing infrastructure (e.g. REST endpoints, WebSocket connections, or authentication proxies) to facilitate trading of SDPs between the proper clients.
+
+-->
+
+---
+layout: default
+---
+
+# SDP spec
+Consists of Key-Value pairs. Following are the keys used by WebRTC.
+
+- `v` - Version, should be equal to `0`.
+- `o` - Origin, contains a unique ID useful for renegotiations.
+- `s` - Session Name, should be equal to `-`.
+- `t` - Timing, should be equal to `0 0`.
+- `m` - Media Description `(m=<media> <port> <proto> <fmt> ...)`, described in detail later.
+- `a` - Attribute, a free text field. This is the most common used line in WebRTC.
+- `c` - Connection Data, should be equal to `IN IP4 0.0.0.0`.
+
+---
+layout: default
+---
+
+# SDP breakdown
+
+<div grid="~ cols-2 gap-4">
+
+<div>
+
+```text {all|5|6|7-10|all}
+v=0
+o=- 3546004397921447048 1596742744 IN IP4 0.0.0.0
+s=-
+t=0 0
+a=fingerprint:sha-256 0F:74:31:25:CB:A2:13:EC:28:6F:6D:2C:61:FF:5D:C2:BC:B9:DB:3D:98:14:8D:1A:BB:EA:33:0C:A4:60:A8:8E
+a=group:BUNDLE 0 1
+a=candidate:foundation 1 udp 2130706431 192.168.1.1 53165 typ host generation 0
+a=candidate:foundation 2 udp 2130706431 192.168.1.1 53165 typ host generation 0
+a=candidate:foundation 1 udp 1694498815 1.2.3.4 57336 typ srflx raddr 0.0.0.0 rport 57336 generation 0
+a=candidate:foundation 2 udp 1694498815 1.2.3.4 57336 typ srflx raddr 0.0.0.0 rport 57336 generation 0
+a=end-of-candidates
+
+// media description
+```
+
+<!-- -->
+
+</div>
+<div>
+ <ul>
+ <li><code>fingerprint:sha-256</code> - This is a hash of the certificate a peer is using for DTLS. After the DTLS handshake is completed, you compare this to the actual certificate to confirm you are communicating with whom you expect.</li>
+
+  <li><code>group:BUNDLE</code> - Bundling is an act of running multiple types of traffic over one connection. Some WebRTC implementations use a dedicated connection per media stream. Bundling should be preferred.</li>
+  
+  <li><code>candidate</code> - This is an ICE Candidate that comes from the ICE Agent. This is one possible address that the WebRTC Agent is available on. These are fully explained in the upcoming slides.</li>
+ </ul>
+</div>
+
+</div>
+
+<style>
+    li {
+        padding-top: 8px;
+        @apply text-sm;
+    }
+</style>
+
+---
+layout: two-cols
+---
+
+# Media description in SDP
+
+```text {all|4|5|6|1,9|10|all}
+m=audio 9 UDP/TLS/RTP/SAVPF 111
+c=IN IP4 0.0.0.0
+a=setup:active
+a=mid:0
+a=ice-ufrag:CsxzEWmoKpJyscFj
+a=ice-pwd:mktpbhgREmjEwUFSIJyPINPUhgDqJlSd
+a=rtcp-mux
+a=rtcp-rsize
+a=rtpmap:111 opus/48000/2
+a=fmtp:111 minptime=10;useinbandfec=1
+a=ssrc:350842737 cname:yvKPspsHcYcwGFTw
+a=ssrc:350842737 msid:yvKPspsHcYcwGFTw DfQnKjQQuwceLFdV
+a=ssrc:350842737 mslabel:yvKPspsHcYcwGFTw
+a=ssrc:350842737 label:DfQnKjQQuwceLFdV
+a=msid:yvKPspsHcYcwGFTw DfQnKjQQuwceLFdV
+a=sendrecv
+```
+
+::right::
+
+
+- `mid` - Used for identifying media streams within a session description.
+- `ice-ufrag` - This is the user fragment value for the ICE Agent. Used for the authentication of ICE Traffic.
+- `ice-pwd` - This is the password for the ICE Agent. Used for the authentication of ICE Traffic.
+- `rtpmap` - This value is used to map a specific codec to an RTP Payload Type. Payload types are not static, so for every call the offerer decides the payload types for each codec.
+- `fmtp` - Defines additional values for one Payload Type. This is useful to communicate a specific video profile or encoder setting.
+- `ssrc` - A Synchronization Source (SSRC) defines a single media stream track. `label` is the ID for this individual stream. `mslabel` is the ID for a container that can have multiple streams inside it.
+
+<style>
+    ul {
+        padding-top: 4rem;
+        padding-left: 16px;
+    }
+    li {
+        @apply text-sm;
+    }
+</style>
+
+<!-- 
+
+-->
+
+---
+layout: default
+---
+
+# Step 2: Connection
 
 ---
 layout: image-right
