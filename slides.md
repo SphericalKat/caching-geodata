@@ -31,11 +31,6 @@ fonts:
 
 A gentle introduction to the protocols powering Audio/Video calls worldwide.
 
-<!-- <div class="pt-12">
-  <span @click="$slidev.nav.next" class="px-2 py-1 rounded cursor-pointer" hover="bg-white bg-opacity-10">
-    Press Space for next page <carbon:arrow-right class="inline"/>
-  </span>
-</div> -->
 
 <div class="abs-br m-6 flex gap-2">
   <a href="https://github.com/SphericalKat/demystifying-webrtc" target="_blank" alt="GitHub"
@@ -49,21 +44,66 @@ The last comment block of each slide will be treated as slide notes. It will be 
 -->
 
 ---
+layout:default
+---
+
+# Why do I care?
+
+- **Conferencing**
+- **Broadcasting**
+- **Remote Access**
+- **File Sharing and Censorship Circumvention**
+- **Internet of Things**
+- **Media Protocol Bridging**
+
+<!-- 
+Conferencing - Conferencing is the original use case for WebRTC. The protocol contains a few necessary features that no other protocol offers in the browser. You could build a conferencing system with WebSockets and it may work in optimal conditions. If you want something that can be deployed in real world network conditions, WebRTC is the best choice.
+
+WebRTC provides congestion control and adaptive bitrate for media. As the conditions of the network change, users will still get the best experience possible. Developers don’t have to write any additional code to measure these conditions either.
+
+Broadcasting - WebRTC being in the browser makes it easy for users to publish video. It removes the requirement for users to download a new client. Any platform that has a web browser can publish video. Publishers can then send multiple tracks and modify or remove them at anytime. This is a huge improvement over legacy protocols that only allowed one audio or one video track per connection.
+
+WebRTC gives developers greater control over the latency versus quality trade-offs. If it is more important that latency never exceeds a certain threshold, and you are willing to tolerate some decoding artifacts. You can configure the viewer to play media as soon as it arrives. With other protocols that run over TCP, that isn’t as easy. In the browser you can request data and that is it.
+
+File Sharing and Censorship Circumvention - File Sharing and Censorship Circumvention are dramatically different problems. However, WebRTC solves the same problems for them both. It makes them both easily available and harder to block.
+
+The first problem that WebRTC solves is getting the client. If you want to join a file sharing network, you need to download the client. Even if the network is distributed, you still need to get the client first. In a restricted network the download will often be blocked. Even if you can download it, the user may not be able to install and run the client. WebRTC is available in every web browser already making it readily available.
+
+The second problem that WebRTC solves is your traffic being blocked. If you use a protocol that is just for file sharing or censorship circumvention it is much easier to block it. Since WebRTC is a general purpose protocol, blocking it would impact everyone. Blocking WebRTC might prevent other users of the network from joining conference calls.
+
+Internet of Things - Internet of Things (IoT) covers a few different use cases. For many this means network connected security cameras. Using WebRTC you can stream the video to another WebRTC peer like your phone or a browser. Another use case is having devices connect and exchange sensor data. You can have two devices in your LAN exchange climate, noise or light readings.
+
+WebRTC has a huge privacy advantage here over legacy video stream protocols. Since WebRTC supports P2P connectivity the camera can send the video directly to your browser. There is no reason for your video to be sent to a 3rd party server. Even when video is encrypted, an attacker can make assumptions from the metadata of the call.
+
+Interoperability is another advantage for the IoT space. WebRTC is available in lots of different languages; C#, C++, C, Go, Java, Python, Rust and TypeScript. This means you can use the language that works best for you. You also don’t have to turn to proprietary protocols or formats to be able to connect your clients.
+
+Media Protocol Bridging - You have existing hardware and software that is producing video, but you can’t upgrade it yet. Expecting users to download a proprietary client to watch videos is frustrating. The answer is to run a WebRTC bridge. The bridge translates between the two protocols so users can use the browser with your legacy setup.
+
+Many of the formats that developers bridge with use the same protocols as WebRTC. SIP is commonly exposed via WebRTC and allows users to make phone calls from their browser. RTSP is used in lots of legacy security cameras. They both use the same underlying protocols (RTP and SDP) so it is computationally cheap to run. The bridge is just required to add or remove things that are WebRTC specific.
+
+Data Protocol Bridging - A web browser is only able to speak a constrained set of protocols. You can use HTTP, WebSockets, WebRTC and QUIC. If you want to connect to anything else, you need to use a protocol bridge. A protocol bridge is a server that converts foreign traffic into something the browser can access. A popular example is using SSH from your browser to access a server. WebRTC’s data channels have two advantages over the competition.
+
+WebRTC’s data channels allow unreliable and unordered delivery. In cases where low latency is critical this is needed. You don’t want new data to be blocked by old data, this is known as head-of-line blocking. Imagine you are playing a multiplayer First-person shooter. Do you really care where the player was two seconds ago? If that data didn’t arrive in time, it doesn’t make sense to keep trying to send it. Unreliable and unordered delivery allows you to use the data as soon as it arrives.
+
+Data channels also provide feedback pressure. This tells you if you are sending data faster than your connection can support. You then have two choices when this happens. The data channel can either be configured to buffer and deliver the data late, or you can drop the data that hasn’t arrived in real-time.
+ -->
+
+---
 transition: fade-out
 layout: default
 ---
 
-# What _is_ WebRTC? Why is it useful?
+# What is WebRTC?
 
 <br/>
 
 
-- 📝 **Protocol** - Specifies how 2 agents can negotiate _bi-directional_ _secure_ _real-time_ communication.
-- 🎨 **API** - Allows developers to use the WebRTC protocol.
-- 🧑‍💻 **Open standard** - WebRTC is an open standard with multiple FOSS implementations.
-- 🤹 **Widely available** - All modern browsers support WebRTC.
-- 🎥 **Industry Standard** - The backbone of the Audio/Video call industry.
-- 📤 **Mandatory encryption** - Communication between two peers is mandatorily encrypted.
+- **Protocol** - Specifies how 2 agents can negotiate _bi-directional_ _secure_ _real-time_ communication.
+- **API** - Allows developers to use the WebRTC protocol.
+- **Open standard** - WebRTC is an open standard with multiple FOSS implementations.
+- **Widely available** - All modern browsers support WebRTC.
+- **Industry Standard** - The backbone of the Audio/Video call industry.
+- **Mandatory encryption** - Communication between two peers is mandatorily encrypted.
 
 <!--
 You can have `style` tag in markdown to override the style for the current page.
