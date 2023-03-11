@@ -158,7 +158,7 @@ layout: default
 
 # Signaling
 
-- **WebRTC agents** have no idea who to communicate with. Signalling is used to bootstrap the call.
+- **WebRTC agents** have no idea who to communicate with. Signalling is used to bootstrap the call by exchanging some data between the two peers.
 - **Signaling** - uses an existing plaintext protocol called **SDP** (Session Description Protocol)
 - Each **SDP** message is made up of Key-Value pairs, which contains information such as:
   - The **IPs** and **Ports** that the agent is reachable on (candidates).
@@ -260,7 +260,7 @@ layout: two-cols
 
 # Media description in SDP
 
-```text {all|4|5|6|1,9|10|11-14|all}
+```text {all|4|1,9|10|11-14|all}
 m=audio 9 UDP/TLS/RTP/SAVPF 111
 c=IN IP4 0.0.0.0
 a=setup:active
@@ -283,8 +283,6 @@ a=sendrecv
 
 
 - `mid` - Used for identifying media streams within a session description.
-- `ice-ufrag` - This is the user fragment value for the ICE Agent. Used for the authentication of ICE Traffic.
-- `ice-pwd` - This is the password for the ICE Agent. Used for the authentication of ICE Traffic.
 - `rtpmap` - This value is used to map a specific codec to an RTP Payload Type. Payload types are not static, so for every call the offerer decides the payload types for each codec.
 - `fmtp` - Defines additional values for one Payload Type. This is useful to communicate a specific video profile or encoder setting.
 - `ssrc` - A Synchronization Source (SSRC) defines a single media stream track. `label` is the ID for this individual stream. `mslabel` is the ID for a container that can have multiple streams inside it.
@@ -420,7 +418,7 @@ layout: default
 
  <style>
     li {
-        font-size: 1rem;
+        font-size: 1.25rem;
         line-height: 1rem;
         @apply pt-4;
     }
@@ -443,7 +441,13 @@ layout: default
 - **Lossy and Lossless compression**: Video can be encoded to be lossless (no information is lost) or lossy (information may be lost). RTP usually uses lossy compression to prevent high latency streams and more dropped packets, even if the video quality is not as good.
 
 - **Intra and Inter frame compression**: Intra-frame compression reduces the bits used to describe a single video frame. The same techniques are used to compress still pictures, like the JPEG compression method. On the other hand, inter-frame compression looks for ways to not send the same information twice, since video is made up of many pictures.
-
+<style>
+    li {
+        font-size: 1.3rem;
+        line-height: 1.2rem;
+        @apply pt-4;
+    }
+</style>
 
 ---
 layout: default
