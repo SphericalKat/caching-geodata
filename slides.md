@@ -365,8 +365,8 @@ Traversal Using Relays around NAT
 - Used when direct connectivity isn't possible. Could be due to incompatible NAT types, or maybe the NATs don't speak the same protocol.
 - Uses a dedicated server, which acts as a proxy for a peer. The client connects to a TURN Server and creates an `Allocation`. By creating an allocation, a client gets a temporary IP/Port/Protocol that can be used to send traffic back to the client. This new listener is known as the **Relayed Transport Address**.
 - Disadvantages:
- - Increased latency/packet loss/jitter
- - TURN servers are expensive to host compared to STUN servers, as they require large amounts of bandwidth and resources.
+    - Increased latency/packet loss/jitter
+    - TURN servers are expensive to host compared to STUN servers, as they require large amounts of bandwidth and resources.
 
 <!-- 
 Think of it as a forwarding address, you give this out so that others can send you traffic via TURN!
@@ -438,6 +438,30 @@ RTCP (RTP Control Protocol) is the protocol that communicates metadata about the
 layout: default
 ---
 
+# Video 101
+
+- **Lossy and Lossless compression**: Video can be encoded to be lossless (no information is lost) or lossy (information may be lost). RTP usually uses lossy compression to prevent high latency streams and more dropped packets, even if the video quality is not as good.
+
+- **Intra and Inter frame compression**: Intra-frame compression reduces the bits used to describe a single video frame. The same techniques are used to compress still pictures, like the JPEG compression method. On the other hand, inter-frame compression looks for ways to not send the same information twice, since video is made up of many pictures.
+
+
+---
+layout: default
+---
+# Inter frame compression
+
+- I-Frame - A complete picture that can be decoded without anything else.
+- P-Frame - A partial picture that contains only changes from the previous picture.
+- B-Frame - A partial picture that is a modification of previous and future pictures.
+
+<br />
+
+<img src="/compression.png" class="object-cover h-64 center" />
+
+---
+layout: default
+---
+
 # Dealing with unpredictable networks
  - Real-life networks are **unpredictable** and **unreliable** include packet loss; **RTCP** helps mitigate this. 
  - **RTCP** allows for **PLI** (Picture Loss Indication) to be sent whenever the decoder is unable to decode a partial frame; either due to packet loss or if the decoder crashed. It requests a full key frame from the sender.
@@ -461,7 +485,7 @@ The main idea is to adjust encoding bitrate based on predicted, current, and fut
 layout: default
 ---
 
-# Adaptive Bitrate and Bandwidth Estimation
+# Adaptive Bitrate and Bandwidth Estimation - an exercise for the viewer
 
 - **REMB** - Receiver Estimated Maximum Bitrate; the **sender** receives bandwidth estimation from the **receiver**, sets encoder bitrate to the received value. Doesn't work very well in practice.
 - **GCC** - Google Congestion Control; used for accurate bandwidth estimation.
