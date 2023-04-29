@@ -177,5 +177,8 @@ A node of a point quadtree is similar to a node of a binary tree, with the major
 - P95 latency: 203.50105 ms
 - P99 latency: 212.73934 ms
 
+---
+layout: center
+---
 
-
+# kat.bio
