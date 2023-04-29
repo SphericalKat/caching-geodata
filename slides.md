@@ -76,10 +76,6 @@ layout: default
 
 <br/>
 
-## Problems
-- Too **granular**. Two locations a few metres apart can have slightly different values for lat & lon.
-- Even with a high volume of requests, it is unlikely that multiple requests are made with the exact same coordinates.
-
 <!--
 You can have `style` tag in markdown to override the style for the current page.
 Learn more: https://sli.dev/guide/syntax#embedded-styles
